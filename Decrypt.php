@@ -61,16 +61,19 @@ class Decrypt extends AbstractLoader
     public function enc($enc): self
     {
         $clone = clone $this;
+
         switch (true) {
             case is_string($enc):
                 $clone->allowedContentEncryptionAlgorithms[] = $enc;
 
                 return $clone;
+
             case $enc instanceof Algorithm:
                 $clone->algorithms[$enc->name()] = $enc;
                 $clone->allowedContentEncryptionAlgorithms[] = $enc->name();
 
                 return $clone;
+
             default:
                 throw new InvalidArgumentException('Invalid parameter "enc". Shall be a string or an algorithm instance.');
         }
@@ -89,7 +92,7 @@ class Decrypt extends AbstractLoader
         return $clone;
     }
 
-    public function run(): JWT
+    public function run($key): array
     {
         if (0 !== count($this->allowedAlgorithms)) {
             $this->headerCheckers[] = new Checker\AlgorithmChecker($this->allowedAlgorithms, true);
@@ -110,12 +113,15 @@ class Decrypt extends AbstractLoader
 
         $jwt = new JWT();
         $jwt->header->replace($jwe->getSharedProtectedHeader());
-        $jwt->claims->replace(JsonConverter::decode($jwe->getPayload()));
 
-        $claimChecker = new Checker\ClaimCheckerManager($this->claimCheckers);
-        $claimChecker->check($jwt->claims->all());
+        $decoded = json_encode(\Firebase\JWT\JWT::decode($jwe->getPayload(), $key, ["RS256"]));
 
-        return $jwt;
+        $jwt->claims->replace(JsonConverter::decode($decoded));
+        
+        // $claimChecker = new Checker\ClaimCheckerManager($this->claimCheckers);
+        // $claimChecker->check($jwt->claims->all(), $this->mandatoryClaims);
+
+        return $jwt->claims->all();
     }
 
     protected function getAlgorithmMap(): array
