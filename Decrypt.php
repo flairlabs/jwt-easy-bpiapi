@@ -138,15 +138,15 @@ class Decrypt extends AbstractLoader
         $headerChecker = new Checker\HeaderCheckerManager($this->headerCheckers, [new JWETokenSupport()]);
         $headerChecker->check($jwe, 0);
 
-        // $verifier = new JWEDecrypter(
-        //     new AlgorithmManager($this->algorithms),
-        //     new AlgorithmManager($this->algorithms),
-        //     new CompressionMethodManager($this->compressionMethods)
-        // );
-        // $verifier->decryptUsingKeySet($jwe, $this->jwkset, 0);
+        $verifier = new JWEDecrypter(
+            new AlgorithmManager($this->algorithms),
+            new AlgorithmManager($this->algorithms),
+            new CompressionMethodManager($this->compressionMethods)
+        );
+        $verifier->decryptUsingKeySet($jwe, $this->jwkset, 0);
 
-        // $jwt = new JWT();
-        // $jwt->header->replace($jwe->getSharedProtectedHeader());
+        $jwt = new JWT();
+        $jwt->header->replace($jwe->getSharedProtectedHeader());
 
         // $decoded = json_encode(\Firebase\JWT\JWT::decode($jwe->getPayload(), $key, ["RS256"]));
 
