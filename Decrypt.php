@@ -154,7 +154,7 @@ class Decrypt extends AbstractLoader
         // $claimChecker = new Checker\ClaimCheckerManager($this->claimCheckers);
         // $claimChecker->check($jwt->claims->all(), $this->mandatoryClaims);
 
-        return $key;
+        return array($key);
     }
 
     protected function getAlgorithmMap(): array
