@@ -148,12 +148,13 @@ class Decrypt extends AbstractLoader
 
         $decoded = json_encode(\Firebase\JWT\JWT::decode($jwe->getPayload(), $key, ["RS256"]));
 
-        $jwt->claims->replace(JsonConverter::decode($decoded));
+        // $jwt->claims->replace(JsonConverter::decode($decoded));
         
         // $claimChecker = new Checker\ClaimCheckerManager($this->claimCheckers);
         // $claimChecker->check($jwt->claims->all(), $this->mandatoryClaims);
 
-        return $jwt->claims->all();
+        // return $jwt->claims->all();
+        return array($decoded);
     }
 
     protected function getAlgorithmMap(): array
