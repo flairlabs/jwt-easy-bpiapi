@@ -143,18 +143,18 @@ class Decrypt extends AbstractLoader
         );
         $verifier->decryptUsingKeySet($jwe, $this->jwkset, 0);
 
-        $jwt = new \Jose\Easy\JWT();
-        $jwt->header->replace($jwe->getSharedProtectedHeader());
+        // $jwt = new \Jose\Easy\JWT();
+        // $jwt->header->replace($jwe->getSharedProtectedHeader());
 
         $decoded = json_encode(\Firebase\JWT\JWT::decode($jwe->getPayload(), $key, ["RS256"]));
 
-        $jwt->claims->replace(JsonConverter::decode($decoded));
+        // $jwt->claims->replace(JsonConverter::decode($decoded));
         
         // $claimChecker = new Checker\ClaimCheckerManager($this->claimCheckers);
         // $claimChecker->check($jwt->claims->all(), $this->mandatoryClaims);
 
-        return $jwt->claims->all();
-        // return array($decoded);
+        // return $jwt->claims->all();
+        return array($decoded);
     }
 
 
