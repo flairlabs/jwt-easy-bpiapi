@@ -127,9 +127,9 @@ class Decrypt extends AbstractLoader
     public function test($key): array
     {
             // Some potentially crashy code
-        // if (0 !== count($this->allowedAlgorithms)) {
-        //     $this->headerCheckers[] = new Checker\AlgorithmChecker($this->allowedAlgorithms, true);
-        // }
+        if (0 !== count($this->allowedAlgorithms)) {
+            $this->headerCheckers[] = new Checker\AlgorithmChecker($this->allowedAlgorithms, true);
+        }
         // if (0 !== count($this->allowedContentEncryptionAlgorithms)) {
         //     $this->headerCheckers[] = new ContentEncryptionAlgorithmChecker($this->allowedContentEncryptionAlgorithms, true);
         // }
