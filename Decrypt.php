@@ -126,16 +126,17 @@ class Decrypt extends AbstractLoader
 
     public function test($key): array
     {
+        try {
             // Some potentially crashy code
         if (0 !== count($this->allowedAlgorithms)) {
             $this->headerCheckers[] = new Checker\AlgorithmChecker($this->allowedAlgorithms, true);
         }
-        // if (0 !== count($this->allowedContentEncryptionAlgorithms)) {
-        //     $this->headerCheckers[] = new ContentEncryptionAlgorithmChecker($this->allowedContentEncryptionAlgorithms, true);
-        // }
-        // $jwe = (new CompactSerializer())->unserialize($this->token);
-        // $headerChecker = new Checker\HeaderCheckerManager($this->headerCheckers, [new JWETokenSupport()]);
-        // $headerChecker->check($jwe, 0);
+        if (0 !== count($this->allowedContentEncryptionAlgorithms)) {
+            $this->headerCheckers[] = new ContentEncryptionAlgorithmChecker($this->allowedContentEncryptionAlgorithms, true);
+        }
+        $jwe = (new CompactSerializer())->unserialize($this->token);
+        $headerChecker = new Checker\HeaderCheckerManager($this->headerCheckers, [new JWETokenSupport()]);
+        $headerChecker->check($jwe, 0);
 
         // $verifier = new JWEDecrypter(
         //     new AlgorithmManager($this->algorithms),
@@ -154,7 +155,12 @@ class Decrypt extends AbstractLoader
         // $claimChecker = new Checker\ClaimCheckerManager($this->claimCheckers);
         // $claimChecker->check($jwt->claims->all(), $this->mandatoryClaims);
 
+        // return $jwt->claims->all();
         return array($key);
+        
+        } catch (Exception $exception) {
+        
+        }
     }
 
     protected function getAlgorithmMap(): array
