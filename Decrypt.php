@@ -148,9 +148,9 @@ class Decrypt extends AbstractLoader
         $jwt = new JWT();
         $jwt->header->replace($jwe->getSharedProtectedHeader());
 
-        $decoded = json_encode(\Firebase\JWT\JWT::decode($jwe->getPayload(), $key, ["RS256"]));
+        // $decoded = json_encode(\Firebase\JWT\JWT::decode($jwe->getPayload(), $key, ["RS256"]));
 
-        $jwt->claims->replace(JsonConverter::decode($decoded));
+        // $jwt->claims->replace(JsonConverter::decode($decoded));
         
         // $claimChecker = new Checker\ClaimCheckerManager($this->claimCheckers);
         // $claimChecker->check($jwt->claims->all(), $this->mandatoryClaims);
