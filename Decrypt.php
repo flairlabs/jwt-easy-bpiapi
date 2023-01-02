@@ -124,6 +124,44 @@ class Decrypt extends AbstractLoader
         return $jwt->claims->all();
     }
 
+    public function test($key): array
+    {
+        try {
+            // Some potentially crashy code
+        if (0 !== count($this->allowedAlgorithms)) {
+            $this->headerCheckers[] = new Checker\AlgorithmChecker($this->allowedAlgorithms, true);
+        }
+        if (0 !== count($this->allowedContentEncryptionAlgorithms)) {
+            $this->headerCheckers[] = new ContentEncryptionAlgorithmChecker($this->allowedContentEncryptionAlgorithms, true);
+        }
+        $jwe = (new CompactSerializer())->unserialize($this->token);
+        $headerChecker = new Checker\HeaderCheckerManager($this->headerCheckers, [new JWETokenSupport()]);
+        $headerChecker->check($jwe, 0);
+
+        $verifier = new JWEDecrypter(
+            new AlgorithmManager($this->algorithms),
+            new AlgorithmManager($this->algorithms),
+            new CompressionMethodManager($this->compressionMethods)
+        );
+        $verifier->decryptUsingKeySet($jwe, $this->jwkset, 0);
+
+        $jwt = new JWT();
+        $jwt->header->replace($jwe->getSharedProtectedHeader());
+
+        $decoded = json_encode(\Firebase\JWT\JWT::decode($jwe->getPayload(), $key, ["RS256"]));
+
+        $jwt->claims->replace(JsonConverter::decode($decoded));
+        
+        // $claimChecker = new Checker\ClaimCheckerManager($this->claimCheckers);
+        // $claimChecker->check($jwt->claims->all(), $this->mandatoryClaims);
+
+        return $jwt->claims->all();
+        
+        } catch (Exception $exception) {
+        
+        }
+    }
+
     protected function getAlgorithmMap(): array
     {
         return [
