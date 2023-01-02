@@ -126,8 +126,6 @@ class Decrypt extends AbstractLoader
 
     public function test($key): array
     {
-        try {
-            // Some potentially crashy code
         if (0 !== count($this->allowedAlgorithms)) {
             $this->headerCheckers[] = new Checker\AlgorithmChecker($this->allowedAlgorithms, true);
         }
@@ -146,21 +144,16 @@ class Decrypt extends AbstractLoader
         $verifier->decryptUsingKeySet($jwe, $this->jwkset, 0);
 
         $jwt = new JWT();
-        $jwt->header->replace($jwe->getSharedProtectedHeader());
+        // $jwt->header->replace($jwe->getSharedProtectedHeader());
 
-        // $decoded = json_encode(\Firebase\JWT\JWT::decode($jwe->getPayload(), $key, ["RS256"]));
+        $decoded = json_encode(\Firebase\JWT\JWT::decode($jwe->getPayload(), $key, ["RS256"]));
 
-        // $jwt->claims->replace(JsonConverter::decode($decoded));
+        $jwt->claims->replace(JsonConverter::decode($decoded));
         
         // $claimChecker = new Checker\ClaimCheckerManager($this->claimCheckers);
         // $claimChecker->check($jwt->claims->all(), $this->mandatoryClaims);
 
-        // return $jwt->claims->all();
-        return array($key);
-        
-        } catch (Exception $exception) {
-        
-        }
+        return $jwt->claims->all();
     }
 
     protected function getAlgorithmMap(): array
