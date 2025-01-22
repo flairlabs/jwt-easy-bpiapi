@@ -28,6 +28,7 @@ use Jose\Component\Encryption\Compression\Deflate;
 use Jose\Component\Encryption\JWEDecrypter;
 use Jose\Component\Encryption\JWETokenSupport;
 use Jose\Component\Encryption\Serializer\CompactSerializer;
+use Firebase\JWT\Key;
 
 class Decrypt extends AbstractLoader
 {
@@ -114,7 +115,7 @@ class Decrypt extends AbstractLoader
         $jwt = new \Jose\Easy\JWT();
         $jwt->header->replace($jwe->getSharedProtectedHeader());
 
-        $decoded = json_encode(\Firebase\JWT\JWT::decode($jwe->getPayload(), $key, ["RS256"]));
+        $decoded = json_encode(\Firebase\JWT\JWT::decode($jwe->getPayload(),new Key($key, 'RS256')));
 
         $jwt->claims->replace(JsonConverter::decode($decoded));
         
