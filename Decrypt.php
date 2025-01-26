@@ -112,27 +112,28 @@ class Decrypt extends AbstractLoader
         );
         $verifier->decryptUsingKeySet($jwe, $this->jwkset, 0);
 
-        $jwt = new \Jose\Easy\JWT();
-        $jwt->header->replace($jwe->getSharedProtectedHeader());
+        // $jwt = new \Jose\Easy\JWT();
+        // $jwt->header->replace($jwe->getSharedProtectedHeader());
 
-        $decoded = json_encode(\Firebase\JWT\JWT::decode($jwe->getPayload(),new Key($key, 'RS256')));
 
-        $jwt->claims->replace(JsonConverter::decode($decoded));
+        // $jwt->claims->replace(JsonConverter::decode($decoded));
         
         // $claimChecker = new Checker\ClaimCheckerManager($this->claimCheckers);
         // $claimChecker->check($jwt->claims->all(), $this->mandatoryClaims);
 
-        return $jwt->claims->all();
+        // return $jwt->claims->all();
+        
+        return $jwe->getPayload();
     }
 
     public function test()
     {
-        if (0 !== count($this->allowedAlgorithms)) {
-            $this->headerCheckers[] = new Checker\AlgorithmChecker($this->allowedAlgorithms, true);
-        }
-        if (0 !== count($this->allowedContentEncryptionAlgorithms)) {
-            $this->headerCheckers[] = new ContentEncryptionAlgorithmChecker($this->allowedContentEncryptionAlgorithms, true);
-        }
+        // if (0 !== count($this->allowedAlgorithms)) {
+        //     $this->headerCheckers[] = new Checker\AlgorithmChecker($this->allowedAlgorithms, true);
+        // }
+        // if (0 !== count($this->allowedContentEncryptionAlgorithms)) {
+        //     $this->headerCheckers[] = new ContentEncryptionAlgorithmChecker($this->allowedContentEncryptionAlgorithms, true);
+        // }
         $jwe = (new CompactSerializer())->unserialize($this->token);
         $headerChecker = new Checker\HeaderCheckerManager($this->headerCheckers, [new JWETokenSupport()]);
         $headerChecker->check($jwe, 0);
