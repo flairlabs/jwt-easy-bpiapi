@@ -128,22 +128,36 @@ class Decrypt extends AbstractLoader
 
     public function test()
     {
-        // if (0 !== count($this->allowedAlgorithms)) {
-        //     $this->headerCheckers[] = new Checker\AlgorithmChecker($this->allowedAlgorithms, true);
-        // }
-        // if (0 !== count($this->allowedContentEncryptionAlgorithms)) {
-        //     $this->headerCheckers[] = new ContentEncryptionAlgorithmChecker($this->allowedContentEncryptionAlgorithms, true);
-        // }
+        
+        error_log("Initialize decrypt ".microtime(true));
+        if (0 !== count($this->allowedAlgorithms)) {
+            $this->headerCheckers[] = new Checker\AlgorithmChecker($this->allowedAlgorithms, true);
+        }
+        error_log("done algorithm checker ".microtime(true));
+        if (0 !== count($this->allowedContentEncryptionAlgorithms)) {
+            $this->headerCheckers[] = new ContentEncryptionAlgorithmChecker($this->allowedContentEncryptionAlgorithms, true);
+        }
+        error_log("done content checker".microtime(true));
+        
         $jwe = (new CompactSerializer())->unserialize($this->token);
+        error_log("done compact unserialize".microtime(true));
+
         $headerChecker = new Checker\HeaderCheckerManager($this->headerCheckers, [new JWETokenSupport()]);
         $headerChecker->check($jwe, 0);
+
+        error_log("done header checker".microtime(true));
 
         $verifier = new JWEDecrypter(
             new AlgorithmManager($this->algorithms),
             new AlgorithmManager($this->algorithms),
             new CompressionMethodManager($this->compressionMethods)
         );
+
+        error_log("done build jwe decrypter".microtime(true));
+
         $verifier->decryptUsingKeySet($jwe, $this->jwkset, 0);
+
+        error_log("done decrypting..".microtime(true));
 
         // $jwt = new \Jose\Easy\JWT();
         // $jwt->header->replace($jwe->getSharedProtectedHeader());
