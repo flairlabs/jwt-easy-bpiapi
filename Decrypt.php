@@ -28,7 +28,6 @@ use Jose\Component\Encryption\Compression\Deflate;
 use Jose\Component\Encryption\JWEDecrypter;
 use Jose\Component\Encryption\JWETokenSupport;
 use Jose\Component\Encryption\Serializer\CompactSerializer;
-use Firebase\JWT\Key;
 
 class Decrypt extends AbstractLoader
 {

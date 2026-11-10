@@ -20,10 +20,7 @@
         }
     },
     "require": {
-        "firebase/php-jwt": "^6.10",
-        "web-token/jwt-checker": "^2.1",
-        "web-token/jwt-encryption": "^2.1",
-        "web-token/jwt-signature": "^2.1"
+        "web-token/jwt-library": "^3.4"
     },
     "suggest": {
         "web-token/jwt-encryption-algorithm-aescbc": "Adds AES-CBC based encryption algorithms",
@@ -41,7 +38,7 @@
         "web-token/jwt-signature-algorithm-rsa": "Adds RSA based signature algorithms"
     },
     "require-dev": {
-        "phpunit/phpunit": "^8.0"
+        "phpunit/phpunit": "^9.6"
     },
     "extra": {
         "branch-alias": {
